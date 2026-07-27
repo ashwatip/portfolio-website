@@ -91,7 +91,7 @@ export default function Home() {
         <article className="resume-paper">
           <header className="resume-header">
             <div><p className="paper-overline">Computer Science + AI</p><h2 id="resume-title">Ashwati Palanivel</h2><p className="resume-title">Purdue University Indianapolis</p></div>
-            <address><a href="mailto:ashwati.in@gmail.com">ashwati.in@gmail.com</a><a href="tel:+14633143810">463-314-3810</a><a href="https://www.linkedin.com/in/ashwatipalanivel" target="_blank" rel="noreferrer">LinkedIn</a><a href="https://github.com/ashwatip" target="_blank" rel="noreferrer">GitHub</a><a className="resume-download" href={`${assetBase}/assets/Ashwati-Palanivel-Resume.pdf`} download>Download résumé PDF ↓</a></address>
+            <address><a href="mailto:ashwati.in@gmail.com">ashwati.in@gmail.com</a><a href="https://www.linkedin.com/in/ashwatipalanivel" target="_blank" rel="noreferrer">LinkedIn</a><a href="https://github.com/ashwatip" target="_blank" rel="noreferrer">GitHub</a><a className="resume-download" href={`${assetBase}/assets/Ashwati-Palanivel-Resume.pdf`} download>Download résumé PDF ↓</a></address>
           </header>
           <p className="paper-introduction">CS and AI student interested in useful technology, research, and the communities that bring good ideas to life.</p>
           <div className="resume-sections">{sections.map(section=><ResumeSection key={section.id} section={section} open={openSection===section.id} onToggle={()=>setOpenSection(openSection===section.id?"":section.id)} />)}</div>
