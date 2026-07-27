@@ -25,10 +25,10 @@ function ResumeSection({ section, open, onToggle }: { section:Section; open:bool
 }
 
 const stickers = [
-  { id:"bio", text:"BIO × CODE", note:"bioinformatics", className:"sticker-bio", x:"-4%", y:"18%" },
-  { id:"cs", text:"{ CS }", note:"computer science", className:"sticker-cs", x:"84%", y:"33%" },
-  { id:"ai", text:"AI / ML", note:"curious mind", className:"sticker-ai", x:"-3%", y:"62%" },
-  { id:"india", text:"INDIAN", note:"roots & identity", className:"sticker-india", x:"80%", y:"76%" },
+  { id:"bio", text:"BIO × CODE", note:"bioinformatics", className:"sticker-bio", x:"-7%", y:"21%" },
+  { id:"cs", text:"{ CS }", note:"computer science", className:"sticker-cs", x:"94%", y:"35%" },
+  { id:"ai", text:"AI / ML", note:"curious mind", className:"sticker-ai", x:"-7%", y:"62%" },
+  { id:"india", text:"INDIAN", note:"roots & identity", className:"sticker-india", x:"91%", y:"77%" },
 ];
 
 function DraggableSticker({ sticker }: { sticker:(typeof stickers)[number] }) {
