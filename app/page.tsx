@@ -1,224 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-type ResumeItem = {
-  id: string;
-  date: string;
-  title: string;
-  place: string;
-  summary: string;
-  details: string[];
-};
+type Section = { id: string; label: string; heading: string; preview: string; content: React.ReactNode };
 
-const resumeItems: ResumeItem[] = [
-  {
-    id: "experience",
-    date: "2024 — NOW",
-    title: "Your Current Role",
-    place: "Company Name · Indianapolis, IN",
-    summary: "A one-line description of the work you do and the value you create.",
-    details: [
-      "Add a specific accomplishment with a measurable result.",
-      "Describe a project you led, built, or meaningfully improved.",
-      "Name the tools, craft, or perspective you bring to your team.",
-    ],
-  },
-  {
-    id: "project",
-    date: "2023 — 2024",
-    title: "A Project You’re Proud Of",
-    place: "Independent / Collaborative",
-    summary: "What you made, who it helped, and why it mattered.",
-    details: [
-      "Explain the problem and the part you personally owned.",
-      "Share the most interesting constraint or decision.",
-      "Add a link to the finished work when you’re ready.",
-    ],
-  },
-  {
-    id: "education",
-    date: "2020 — 2024",
-    title: "Your Degree or Program",
-    place: "School Name · Indiana",
-    summary: "Field of study, focus, honors, or the thread that shaped your work.",
-    details: [
-      "Relevant coursework, studio, thesis, or capstone.",
-      "A student organization, leadership role, or award.",
-    ],
-  },
-  {
-    id: "skills",
-    date: "ALWAYS",
-    title: "Tools & Talents",
-    place: "What I bring to the table",
-    summary: "Strategy · Design · Writing · Research · Technology",
-    details: [
-      "Replace these with your strongest hard and soft skills.",
-      "Keep the list focused on the work you want to do next.",
-    ],
-  },
+const sections: Section[] = [
+  { id:"education", label:"01 / Education", heading:"Purdue University, College of Science", preview:"B.S. Computer Science and Artificial Intelligence · May 2029", content:<><div className="resume-row"><div><strong>Purdue University, College of Science</strong><em>B.S. Computer Science and Artificial Intelligence</em></div><div className="resume-meta"><strong>Indianapolis, Indiana</strong><em>May 2029</em></div></div><p className="detail-line">GPA: 3.74</p></> },
+  { id:"skills", label:"02 / Skills", heading:"Technical Skills & Languages", preview:"Python · Java · JavaScript · React · Graphic Design", content:<ul><li>Programming: Python, Java, JavaScript, React (in progress)</li><li>Graphic design</li><li>Fluent in English; native proficiency in Tamil</li></ul> },
+  { id:"experience", label:"03 / Experience", heading:"Professional Experience", preview:"Health technology and scientific research experience in Dubai", content:<><div className="resume-row"><div><strong>Avanee Polyclinic</strong><em>Patient Data & Technology Intern</em></div><div className="resume-meta"><strong>Dubai, UAE</strong><em>Oct 2023 - Nov 2023</em></div></div><ul><li>Collaborated with health care technicians to aid the implementation of EHR software, streamlining patient data organization throughout the clinic.</li></ul><div className="resume-row sub-entry"><div><strong>Gulf Medical University</strong><em>Future Scientist of UAE Research Mentee</em></div><div className="resume-meta"><strong>Dubai, UAE</strong><em>Nov 2023 - June 2024</em></div></div><ul><li>Worked with experts and 10 peers to develop laboratory concepts and the skills needed to write a high-level scientific research paper.</li><li>Conducted literature reviews, strengthening critical thinking and evidence-based analysis.</li></ul></> },
+  { id:"campus", label:"04 / Campus", heading:"Campus Involvement", preview:"Secretary, Purdue University CS Club in Indianapolis", content:<><div className="resume-row"><div><strong>Purdue University, CS Club in Indianapolis</strong><em>Secretary</em></div><div className="resume-meta"><strong>Indianapolis, Indiana</strong><em>Sept 2025 - Present</em></div></div><ul><li>Organize agendas, record meeting minutes, and manage communications for 50+ members.</li><li>Improved record-keeping and communication to make club operations more efficient.</li><li>Co-organized Hack Indy, a 150+ participant hackathon, coordinating logistics, volunteers, and event programming.</li></ul><div className="resume-row sub-entry"><div><strong>GEMS Founders Al Mizhar School</strong><em>Computer Science Club Co-Founder</em></div><div className="resume-meta"><strong>Dubai, UAE</strong><em>Sept 2024 - May 2025</em></div></div><ul><li>Founded the school&apos;s first Computer Science Club, growing it to 30+ members and the school&apos;s largest student organization.</li><li>Organized weekly coding workshops that developed programming foundations and collaboration.</li></ul></> },
+  { id:"projects", label:"05 / Projects", heading:"Property Finder for D’code Properties", preview:"Responsive real-estate listing platform · 2025 · In progress", content:<><div className="resume-row"><div><strong>Property Finder Website for D’code Properties</strong><em>In progress</em></div><div className="resume-meta"><strong>2025</strong></div></div><ul><li>Designed and built a responsive listing platform with HTML, CSS, and JavaScript for an interactive, intuitive property-search experience.</li><li>Planning a React interface and backend integration so brokers can add, edit, and manage listings dynamically.</li></ul></> },
+  { id:"awards", label:"06 / Honors", heading:"Golden Hammer Award", preview:"Outstanding Club Event · Hack Indy · 2026", content:<><div className="resume-row"><div><strong>Golden Hammer Award for Outstanding Club Event</strong><em>Hack Indy</em></div><div className="resume-meta"><strong>2026</strong></div></div><p className="detail-line">Recognized for Hack Indy&apos;s exceptional impact and execution.</p></> },
 ];
 
-function ResumeEntry({
-  item,
-  open,
-  onToggle,
-}: {
-  item: ResumeItem;
-  open: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <article className={`resume-entry ${open ? "is-open" : ""}`}>
-      <button
-        className="entry-button"
-        onClick={onToggle}
-        aria-expanded={open}
-        aria-controls={`${item.id}-details`}
-      >
-        <span className="entry-date">{item.date}</span>
-        <span className="entry-main">
-          <span className="entry-title">{item.title}</span>
-          <span className="entry-place">{item.place}</span>
-          <span className="entry-summary">{item.summary}</span>
-        </span>
-        <span className="entry-mark" aria-hidden="true">
-          {open ? "−" : "+"}
-        </span>
-      </button>
-      <div
-        className="entry-details"
-        id={`${item.id}-details`}
-        aria-hidden={!open}
-      >
-        <div>
-          <ul>
-            {item.details.map((detail) => (
-              <li key={detail}>{detail}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </article>
-  );
+function ResumeSection({ section, open, onToggle }: { section:Section; open:boolean; onToggle:()=>void }) {
+  return <section className={`resume-section ${open ? "is-open" : ""}`}>
+    <button className="section-toggle" onClick={onToggle} aria-expanded={open} aria-controls={`${section.id}-content`}>
+      <span className="section-label">{section.label}</span>
+      <span className="section-summary"><strong>{section.heading}</strong><span>{section.preview}</span></span>
+      <span className="section-plus" aria-hidden="true">{open ? "−" : "+"}</span>
+    </button>
+    <div className="section-content" id={`${section.id}-content`} aria-hidden={!open}><div className="section-content-inner">{section.content}</div></div>
+  </section>;
 }
 
 export default function Home() {
-  const [openItem, setOpenItem] = useState<string | null>("experience");
+  const [openSection,setOpenSection] = useState("education");
+  const [scrollProgress,setScrollProgress] = useState(0);
+  useEffect(()=>{
+    let frame=0;
+    const update=()=>{ cancelAnimationFrame(frame); frame=requestAnimationFrame(()=>setScrollProgress(Math.min(1,window.scrollY/(window.innerHeight*.95)))); };
+    update(); window.addEventListener("scroll",update,{passive:true});
+    return()=>{ cancelAnimationFrame(frame); window.removeEventListener("scroll",update); };
+  },[]);
 
-  return (
-    <main>
-      <section className="hero" aria-labelledby="intro-title">
-        <nav className="topbar" aria-label="Primary navigation">
-          <a href="#" className="monogram" aria-label="Back to top">
-            YN
-          </a>
-          <a href="#resume" className="nav-link">
-            Resume <span aria-hidden="true">↓</span>
-          </a>
-        </nav>
-
-        <div className="stars" aria-hidden="true" />
-        <div className="moon" aria-hidden="true" />
-
-        <div className="hero-copy">
-          <p className="eyebrow">Indianapolis, Indiana</p>
-          <h1 id="intro-title">
-            I make thoughtful things
-            <br />
-            <em>with people in mind.</em>
-          </h1>
-          <p className="intro">
-            Your Name is a designer, builder, and curious human based in Indy.
-          </p>
-        </div>
-
-        <div className="skyline skyline-back" aria-hidden="true">
-          <i className="bldg b1" />
-          <i className="bldg b2" />
-          <i className="bldg b3" />
-          <i className="bldg b4" />
-          <i className="bldg b5" />
-          <i className="bldg b6" />
-          <i className="bldg b7" />
-          <i className="bldg b8" />
-        </div>
-        <div className="skyline skyline-front" aria-hidden="true">
-          <i className="bldg f1" />
-          <i className="bldg f2" />
-          <i className="bldg f3" />
-          <i className="bldg monument">
-            <span />
-          </i>
-          <i className="bldg f5" />
-          <i className="bldg f6" />
-          <i className="bldg f7" />
-        </div>
-
-        <a href="#resume" className="scroll-cue">
-          <span>Scroll to the story</span>
-          <i aria-hidden="true" />
-        </a>
-      </section>
-
-      <section className="desk" id="resume" aria-labelledby="resume-title">
-        <div className="desk-label">
-          <span>02 / THE PAPER TRAIL</span>
-          <span>Click any line to read more</span>
-        </div>
-
-        <div className="paper-wrap">
-          <div className="paper">
-            <header className="paper-header">
-              <div>
-                <p className="paper-kicker">RESUME / SELECTED WORK</p>
-                <h2 id="resume-title">Your Name</h2>
-                <p className="paper-role">Designer, builder &amp; problem solver</p>
-              </div>
-              <address>
-                Indianapolis, IN
-                <br />
-                you@email.com
-                <br />
-                yoursite.com
-              </address>
-            </header>
-
-            <div className="paper-rule" />
-
-            <p className="paper-intro">
-              I care about clear ideas, useful details, and work that earns its
-              place in people’s lives.
-            </p>
-
-            <div className="resume-list">
-              {resumeItems.map((item) => (
-                <ResumeEntry
-                  key={item.id}
-                  item={item}
-                  open={openItem === item.id}
-                  onToggle={() =>
-                    setOpenItem(openItem === item.id ? null : item.id)
-                  }
-                />
-              ))}
-            </div>
-
-            <footer className="paper-footer">
-              <span>References &amp; a proper PDF available on request.</span>
-              <a href="mailto:you@email.com">Let’s make something →</a>
-            </footer>
-          </div>
-
-          <div className="pen" aria-hidden="true">
-            <span className="pen-cap" />
-            <span className="pen-body" />
-            <span className="pen-grip" />
-            <span className="pen-tip" />
-          </div>
-        </div>
-      </section>
-    </main>
-  );
+  return <main style={{"--scroll-progress":scrollProgress} as React.CSSProperties}>
+    <section className="photo-hero" aria-labelledby="hero-title">
+      <div className="photo-stage" aria-hidden="true"><img src="/assets/indy.jpg" alt="" /></div>
+      <div className="photo-shade" aria-hidden="true" />
+      <nav className="hero-nav" aria-label="Primary navigation"><a className="logo" href="#" aria-label="Ashwati Palanivel, home">AP</a><a href="#resume">Resume ↓</a></nav>
+      <div className="hero-content"><p className="hero-kicker">Computer Science · Purdue Indianapolis</p><h1 id="hero-title">Hi, I&apos;m <em>Ashwati.</em></h1><p>I&apos;m a Computer Science and Artificial Intelligence student building thoughtful technology in the heart of Indianapolis.</p></div>
+      <a className="scroll-indicator" href="#resume"><span>Open my résumé</span><i aria-hidden="true" /></a>
+    </section>
+    <section className="writing-desk" id="resume" aria-labelledby="resume-title">
+      <div className="desk-note"><span>Ashwati Palanivel / Résumé</span><span>Select a section to read more</span></div>
+      <div className="paper-scene">
+        <article className="resume-paper">
+          <header className="resume-header">
+            <div><p className="paper-overline">Computer Science + AI</p><h2 id="resume-title">Ashwati Palanivel</h2><p className="resume-title">Purdue University Indianapolis</p></div>
+            <address><a href="mailto:ashwati.in@gmail.com">ashwati.in@gmail.com</a><a href="tel:+14633143810">463-314-3810</a><a href="https://www.linkedin.com/in/ashwatipalanivel" target="_blank" rel="noreferrer">LinkedIn</a><a href="https://github.com/ashwatip" target="_blank" rel="noreferrer">GitHub</a></address>
+          </header>
+          <p className="paper-introduction">CS and AI student interested in useful technology, research, and the communities that bring good ideas to life.</p>
+          <div className="resume-sections">{sections.map(section=><ResumeSection key={section.id} section={section} open={openSection===section.id} onToggle={()=>setOpenSection(openSection===section.id?"":section.id)} />)}</div>
+          <footer className="resume-footer"><span>Indianapolis, Indiana</span><a href="mailto:ashwati.in@gmail.com">Get in touch →</a></footer>
+        </article>
+        <div className="fountain-pen" aria-hidden="true"><span className="fp-finial" /><span className="fp-cap" /><span className="fp-band" /><span className="fp-barrel" /><span className="fp-section" /><span className="fp-nib"><i /></span></div>
+      </div>
+    </section>
+  </main>;
 }

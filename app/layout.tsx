@@ -19,25 +19,25 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
   const base = host ? `${protocol}://${host}` : "http://localhost:3000";
   const description =
-    "A tactile, interactive portfolio and resume from an Indianapolis-based creative.";
+    "Ashwati Palanivel is a Computer Science and Artificial Intelligence student at Purdue University Indianapolis.";
 
   return {
-    title: "Your Name — Indianapolis Portfolio",
+    title: "Ashwati Palanivel — CS + AI Portfolio",
     description,
     icons: {
       icon: "/favicon.svg",
       shortcut: "/favicon.svg",
     },
     openGraph: {
-      title: "Your Name — Indianapolis Portfolio",
+      title: "Ashwati Palanivel — CS + AI Portfolio",
       description,
-      images: [{ url: `${base}/og.png`, width: 1536, height: 1024 }],
+      images: [{ url: `${base}/assets/indy.jpg`, width: 2048, height: 768 }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Your Name — Indianapolis Portfolio",
+      title: "Ashwati Palanivel — CS + AI Portfolio",
       description,
-      images: [`${base}/og.png`],
+      images: [`${base}/assets/indy.jpg`],
     },
   };
 }
