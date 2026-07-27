@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Section = { id: string; label: string; heading: string; preview: string; content: React.ReactNode };
 
@@ -24,9 +24,51 @@ function ResumeSection({ section, open, onToggle }: { section:Section; open:bool
   </section>;
 }
 
+const stickers = [
+  { id:"bio", text:"BIO × CODE", note:"bioinformatics", className:"sticker-bio", x:"-4%", y:"18%" },
+  { id:"cs", text:"{ CS }", note:"computer science", className:"sticker-cs", x:"84%", y:"33%" },
+  { id:"ai", text:"AI / ML", note:"curious mind", className:"sticker-ai", x:"-3%", y:"62%" },
+  { id:"india", text:"INDIAN", note:"roots & identity", className:"sticker-india", x:"80%", y:"76%" },
+];
+
+function DraggableSticker({ sticker }: { sticker:(typeof stickers)[number] }) {
+  const [position,setPosition] = useState({x:0,y:0});
+  const drag = useRef({active:false,x:0,y:0,startX:0,startY:0});
+
+  const onPointerDown = (event:React.PointerEvent<HTMLButtonElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    drag.current={active:true,x:event.clientX,y:event.clientY,startX:position.x,startY:position.y};
+  };
+  const onPointerMove = (event:React.PointerEvent<HTMLButtonElement>) => {
+    if(!drag.current.active) return;
+    setPosition({x:drag.current.startX+event.clientX-drag.current.x,y:drag.current.startY+event.clientY-drag.current.y});
+  };
+  const stopDragging = () => { drag.current.active=false; };
+  const onKeyDown = (event:React.KeyboardEvent<HTMLButtonElement>) => {
+    const amount=event.shiftKey?20:5;
+    const moves:Record<string,[number,number]>={ArrowLeft:[-amount,0],ArrowRight:[amount,0],ArrowUp:[0,-amount],ArrowDown:[0,amount]};
+    if(moves[event.key]){ event.preventDefault(); const [x,y]=moves[event.key]; setPosition(current=>({x:current.x+x,y:current.y+y})); }
+    if(event.key==="Home"){ event.preventDefault(); setPosition({x:0,y:0}); }
+  };
+
+  return <button
+    className={`drag-sticker ${sticker.className}`}
+    style={{left:sticker.x,top:sticker.y,transform:`translate3d(${position.x}px,${position.y}px,0)`}}
+    onPointerDown={onPointerDown}
+    onPointerMove={onPointerMove}
+    onPointerUp={stopDragging}
+    onPointerCancel={stopDragging}
+    onKeyDown={onKeyDown}
+    aria-label={`${sticker.text} sticker. Drag to move, or use arrow keys. Press Home to reset.`}
+  >
+    <strong>{sticker.text}</strong><span>{sticker.note}</span>
+  </button>;
+}
+
 export default function Home() {
   const [openSection,setOpenSection] = useState("education");
   const [scrollProgress,setScrollProgress] = useState(0);
+  const [stickerReset,setStickerReset] = useState(0);
   useEffect(()=>{
     let frame=0;
     const update=()=>{ cancelAnimationFrame(frame); frame=requestAnimationFrame(()=>setScrollProgress(Math.min(1,window.scrollY/(window.innerHeight*.95)))); };
@@ -43,7 +85,7 @@ export default function Home() {
       <a className="scroll-indicator" href="#resume"><span>Open my résumé</span><i aria-hidden="true" /></a>
     </section>
     <section className="writing-desk" id="resume" aria-labelledby="resume-title">
-      <div className="desk-note"><span>Ashwati Palanivel / Résumé</span><span>Select a section to read more</span></div>
+      <div className="desk-note"><span>Ashwati Palanivel / Résumé</span><span>Drag the stickers · select a section to read more</span><button onClick={()=>setStickerReset(value=>value+1)}>Reset stickers</button></div>
       <div className="paper-scene">
         <article className="resume-paper">
           <header className="resume-header">
@@ -54,6 +96,9 @@ export default function Home() {
           <div className="resume-sections">{sections.map(section=><ResumeSection key={section.id} section={section} open={openSection===section.id} onToggle={()=>setOpenSection(openSection===section.id?"":section.id)} />)}</div>
           <footer className="resume-footer"><span>Indianapolis, Indiana</span><a href="mailto:ashwati.in@gmail.com">Get in touch →</a></footer>
         </article>
+        <div className="sticker-layer" aria-label="Draggable interest stickers">
+          {stickers.map(sticker=><DraggableSticker key={`${sticker.id}-${stickerReset}`} sticker={sticker} />)}
+        </div>
         <div className="fountain-pen" aria-hidden="true"><span className="fp-finial" /><span className="fp-cap" /><span className="fp-band" /><span className="fp-barrel" /><span className="fp-section" /><span className="fp-nib"><i /></span></div>
       </div>
     </section>
