@@ -66,6 +66,7 @@ function DraggableSticker({ sticker }: { sticker:(typeof stickers)[number] }) {
 }
 
 export default function Home() {
+  const assetBase = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const [openSection,setOpenSection] = useState("education");
   const [scrollProgress,setScrollProgress] = useState(0);
   const [stickerReset,setStickerReset] = useState(0);
@@ -78,7 +79,7 @@ export default function Home() {
 
   return <main style={{"--scroll-progress":scrollProgress} as React.CSSProperties}>
     <section className="photo-hero" aria-labelledby="hero-title">
-      <div className="photo-stage" aria-hidden="true"><img src="/assets/indy.jpg" alt="" /></div>
+      <div className="photo-stage" aria-hidden="true"><img src={`${assetBase}/assets/indy.jpg`} alt="" /></div>
       <div className="photo-shade" aria-hidden="true" />
       <nav className="hero-nav" aria-label="Primary navigation"><a className="logo" href="#" aria-label="Ashwati Palanivel, home">AP</a><a href="#resume">Resume ↓</a></nav>
       <div className="hero-content"><p className="hero-kicker">Computer Science · Purdue Indianapolis</p><h1 id="hero-title">Hi, I&apos;m <em>Ashwati.</em></h1><p>I&apos;m a Computer Science and Artificial Intelligence student building thoughtful technology in the heart of Indianapolis.</p></div>

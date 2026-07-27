@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -14,10 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
-  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
-  const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
-  const base = host ? `${protocol}://${host}` : "http://localhost:3000";
+  const base =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    "https://indy-paper-trail-portfolio.ramalakshmi-s.chatgpt.site";
+  const assetBase = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const description =
     "Ashwati Palanivel is a Computer Science and Artificial Intelligence student at Purdue University Indianapolis.";
 
@@ -31,13 +30,13 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: "Ashwati Palanivel — CS + AI Portfolio",
       description,
-      images: [{ url: `${base}/assets/indy.jpg`, width: 2048, height: 768 }],
+      images: [{ url: `${base}${assetBase}/assets/indy.jpg`, width: 2048, height: 768 }],
     },
     twitter: {
       card: "summary_large_image",
       title: "Ashwati Palanivel — CS + AI Portfolio",
       description,
-      images: [`${base}/assets/indy.jpg`],
+      images: [`${base}${assetBase}/assets/indy.jpg`],
     },
   };
 }
